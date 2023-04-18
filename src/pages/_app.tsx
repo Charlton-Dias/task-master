@@ -5,6 +5,8 @@ import { SessionProvider } from "next-auth/react";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
+import "~/styles/custom-editor.css"
+import "~/styles/custom-scrollbar.css"
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
