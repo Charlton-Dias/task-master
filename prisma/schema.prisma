@@ -55,6 +55,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    Board         Board[]
 }
 
 model VerificationToken {
@@ -66,28 +67,27 @@ model VerificationToken {
 }
 
 model Board {
-    id        String   @id @default(uuid())
+    id          String   @id @default(uuid())
     title       String
     created_at  DateTime @default(now())
     updated_at  DateTime @updatedAt
     description String
-    members     String
+    members     String[] @default([])
     creator     String
+    user        User     @relation(fields: [creator], references: [id], onDelete: Cascade)
 }
 
 model Members {
-    id       String   @id @default(uuid())
+    id         String   @id @default(uuid())
     name       String
     joined_on  DateTime @default(now())
     updated_at DateTime @updatedAt
     title      String
     role       String
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
 }
 
 model List {
-    id      String   @id @default(uuid())
+    id        String   @id @default(uuid())
     title     String
     order     String
     board_id  String
@@ -108,7 +108,7 @@ model Card {
 }
 
 model Checklist {
-    id     String   @id @default(uuid())
+    id        String   @id @default(uuid())
     card_id   String
     title     String
     is_done   String
@@ -126,7 +126,7 @@ model Label {
 }
 
 model Comment {
-    id    String   @id @default(uuid())
+    id        String   @id @default(uuid())
     card_id   String
     text      String
     creator   String

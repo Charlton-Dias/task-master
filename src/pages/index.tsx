@@ -1,22 +1,9 @@
 import { Box } from "@mui/material"
 import LoadingButton from '@mui/lab/LoadingButton'
-// import { setBoards } from "../redux/features/boardSlice"
-// import boardApi from "../api/boardApi"
-import { useState } from "react"
+import { api } from "~/utils/api";
 
 const Home = () => {
-  const [loading, setLoading] = useState(false)
-
-  // const createBoard = async () => {
-  //   setLoading(true)
-  //   try {
-  //     const res = await boardApi.create()
-  //   } catch (err) {
-  //     alert(err)
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
+  const mutation = api.board.create.useMutation();
 
   return (
     <Box sx={{
@@ -28,8 +15,13 @@ const Home = () => {
       <LoadingButton
         variant='outlined'
         color='success'
-        // onClick={createBoard}
-        loading={loading}
+        onClick={() => mutation.mutate({
+          title: 'Untitled',
+          description: `Add description here
+          🟢 You can add multiline description
+          🟢 Let's start...`
+        })}
+        loading={mutation.isLoading}
       >
         Click here to create your first board
       </LoadingButton>
