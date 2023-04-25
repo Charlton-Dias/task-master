@@ -14,11 +14,11 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-// model Example {
-//     id        String   @id @default(cuid())
-//     createdAt DateTime @default(now())
-//     updatedAt DateTime @updatedAt
-// }
+model Example {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
 
 // Necessary for Next auth
 model Account {
@@ -68,7 +68,7 @@ model VerificationToken {
 
 
 model Board {
-    b_id        String  @unique
+    b_id        String  @id @default(uuid())
     title       String 
     created_at  DateTime @default(now())
     updated_at  DateTime @updatedAt
@@ -78,48 +78,60 @@ model Board {
 }
 
 model Members {
-    m_id        String  @unique
+    m_id        String  @id @default(uuid())
     name        String 
     joined_on   DateTime @default(now())
     updated_at  DateTime @updatedAt
     title       String
     role        String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model List {
-    l_id        String  @unique
+    l_id        String  @id @default(uuid())
     title       String
     order       String 
     board_id    String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Card {
-    c_id        String  @unique
+    c_id        String  @id @default(uuid())
     due_date    DateTime
     list_id     String
     title       String 
     labels      String
     description String
     members     String[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Checklist {
-    cl_id       String  @unique
+    cl_id       String  @id @default(uuid())
     card_id     String
     title       String 
     is_done     String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Label {
-    lab_id      String  @unique
+    lab_id      String  @id @default(uuid())
     board_id    String
     title       String 
     color       String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Comment {
-    com_id      String  @unique
+    com_id      String  @id @default(uuid())
     card_id     String 
     text        String
     creator     String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
