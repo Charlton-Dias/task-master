@@ -66,7 +66,7 @@ model VerificationToken {
 }
 
 model Board {
-    b_id        String   @id @default(uuid())
+    id        String   @id @default(uuid())
     title       String
     created_at  DateTime @default(now())
     updated_at  DateTime @updatedAt
@@ -76,7 +76,7 @@ model Board {
 }
 
 model Members {
-    m_id       String   @id @default(uuid())
+    id       String   @id @default(uuid())
     name       String
     joined_on  DateTime @default(now())
     updated_at DateTime @updatedAt
@@ -87,7 +87,7 @@ model Members {
 }
 
 model List {
-    l_id      String   @id @default(uuid())
+    id      String   @id @default(uuid())
     title     String
     order     String
     board_id  String
@@ -108,7 +108,7 @@ model Card {
 }
 
 model Checklist {
-    cl_id     String   @id @default(uuid())
+    id     String   @id @default(uuid())
     card_id   String
     title     String
     is_done   String
@@ -126,7 +126,7 @@ model Label {
 }
 
 model Comment {
-    com_id    String   @id @default(uuid())
+    id    String   @id @default(uuid())
     card_id   String
     text      String
     creator   String
