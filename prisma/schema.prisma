@@ -27,12 +27,12 @@ model Account {
     type              String
     provider          String
     providerAccountId String
-    refresh_token     String?  @db.Text
-    access_token      String?  @db.Text
+    refresh_token     String? @db.Text
+    access_token      String? @db.Text
     expires_at        Int?
     token_type        String?
     scope             String?
-    id_token          String?  @db.Text
+    id_token          String? @db.Text
     session_state     String?
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -65,11 +65,9 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-
-
 model Board {
-    b_id        String  @id @default(uuid())
-    title       String 
+    b_id        String   @id @default(uuid())
+    title       String
     created_at  DateTime @default(now())
     updated_at  DateTime @updatedAt
     description String
@@ -78,60 +76,60 @@ model Board {
 }
 
 model Members {
-    m_id        String  @id @default(uuid())
-    name        String 
-    joined_on   DateTime @default(now())
-    updated_at  DateTime @updatedAt
-    title       String
-    role        String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    m_id       String   @id @default(uuid())
+    name       String
+    joined_on  DateTime @default(now())
+    updated_at DateTime @updatedAt
+    title      String
+    role       String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
 }
 
 model List {
-    l_id        String  @id @default(uuid())
-    title       String
-    order       String 
-    board_id    String
+    l_id      String   @id @default(uuid())
+    title     String
+    order     String
+    board_id  String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 model Card {
-    c_id        String  @id @default(uuid())
+    c_id        String   @id @default(uuid())
     due_date    DateTime
     list_id     String
-    title       String 
+    title       String
     labels      String
     description String
     members     String[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
 }
 
 model Checklist {
-    cl_id       String  @id @default(uuid())
-    card_id     String
-    title       String 
-    is_done     String
+    cl_id     String   @id @default(uuid())
+    card_id   String
+    title     String
+    is_done   String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 model Label {
-    lab_id      String  @id @default(uuid())
-    board_id    String
-    title       String 
-    color       String
+    lab_id    String   @id @default(uuid())
+    board_id  String
+    title     String
+    color     String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 model Comment {
-    com_id      String  @id @default(uuid())
-    card_id     String 
-    text        String
-    creator     String
+    com_id    String   @id @default(uuid())
+    card_id   String
+    text      String
+    creator   String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
