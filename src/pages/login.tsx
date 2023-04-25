@@ -1,8 +1,10 @@
 import { Button } from '@mui/material'
 import { signIn, signOut, useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
 
 const Login = () => {
   const session = useSession()
+  const router = useRouter()
 
   if (session.status === 'authenticated') {
     return (
@@ -33,7 +35,7 @@ const Login = () => {
         fullWidth
         onClick={() => {
           signIn()
-            .then(() => console.log('success'))
+            .then(() => router.push('/'))
             .catch(err => console.log(err))
         }}
       >
