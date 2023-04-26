@@ -5,10 +5,12 @@ import { useRouter } from 'next/router'
 import { api } from '~/utils/api'
 import { useState } from 'react'
 import Loading from '~/components/common/Loading'
-
+import AddMemberModal from '~/components/common/AddMemberModal'
+import { useSession } from 'next-auth/react'
 
 const Board = () => {
   const router = useRouter()
+  const session = useSession()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const utils = api.useContext()
@@ -45,12 +47,19 @@ const Board = () => {
       <Box sx={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        width: '100%'
+        justifyContent: 'flex-end',
+        width: '100%',
+        px: '50px'
       }}>
-        <IconButton onClick={() => boardDeleteMutation.mutate({ id: board?.data?.id ?? '' })}>
-          <DeleteOutlinedIcon />
-        </IconButton>
+        {session?.data?.user?.id === board?.data?.creator && (
+          <>
+            <AddMemberModal boardId={board?.data?.id ?? ''} />
+            <IconButton title='Delete Board' onClick={() => boardDeleteMutation.mutate({ id: board?.data?.id ?? '' })}>
+              <DeleteOutlinedIcon />
+            </IconButton>
+          </>
+        )
+        }
       </Box>
       <Box sx={{ padding: '10px 50px' }}>
         <Box>

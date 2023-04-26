@@ -67,4 +67,28 @@ export const boardRouter = createTRPCRouter({
       });
     }),
 
+  addMember: protectedProcedure
+    .input(z.object({
+      id: z.string(),
+      email: z.string(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: { email: input.email }
+      });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      return ctx.prisma.board.update({
+        where: { id: input.id },
+        data: {
+          members: {
+            push: user.id,
+          }
+        }
+      });
+    }),
+
 });
