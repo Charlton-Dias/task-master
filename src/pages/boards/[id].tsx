@@ -4,6 +4,7 @@ import Kanban from '../../components/common/Kanban'
 import { useRouter } from 'next/router'
 import { api } from '~/utils/api'
 import { useState } from 'react'
+import Loading from '~/components/common/Loading'
 
 
 const Board = () => {
@@ -36,7 +37,7 @@ const Board = () => {
   })
 
   if (board.isLoading || !board.data) {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   return (

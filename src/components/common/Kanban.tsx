@@ -5,6 +5,7 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import TaskModal from './TaskModal'
 import { type RouterOutputs, api } from '~/utils/api'
+import Loading from './Loading'
 
 type CardType = RouterOutputs['card']['create']
 
@@ -79,6 +80,9 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
         </Typography>
       </Box>
       <Divider sx={{ margin: '10px 0' }} />
+
+      {lists.isLoading && <Loading />}
+
       <DragDropContext onDragEnd={onDragEnd}>
         <Box sx={{
           display: 'flex',
@@ -86,47 +90,46 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
           width: 'calc(100vw - 400px)',
           overflowX: 'auto'
         }}>
-          {
-            lists.data?.map(list => (
-              <div key={list.id} style={{ width: '300px' }}>
-                <Droppable key={list.id} droppableId={list.id}>
-                  {(provided) => (
-                    <Box
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      sx={{ width: '300px', padding: '10px', marginRight: '10px' }}
-                    >
+          {lists.data?.map(list => (
+            <div key={list.id} style={{ width: '300px' }}>
+              <Droppable key={list.id} droppableId={list.id}>
+                {(provided) => (
+                  <Box
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    sx={{ width: '300px', padding: '10px', marginRight: '10px' }}
+                  >
 
-                      <SectionHeader list={list} />
+                    <SectionHeader list={list} />
 
-                      {list.cards?.map((card, index) => (
-                        <Draggable key={card.id} draggableId={card.id} index={index}>
-                          {(provided, snapshot) => (
-                            <Card
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              sx={{
-                                padding: '10px',
-                                marginBottom: '10px',
-                                cursor: snapshot.isDragging ? 'grab' : 'pointer!important'
-                              }}
-                              onClick={() => setSelectedTask(card)}
-                            >
-                              <Typography>
-                                {card.title === '' ? 'Untitled' : card.title}
-                              </Typography>
-                            </Card>
-                          )}
-                        </Draggable>
-                      ))
-                      }
-                      {provided.placeholder}
-                    </Box>
-                  )}
-                </Droppable>
-              </div>
-            ))
+                    {list.cards?.map((card, index) => (
+                      <Draggable key={card.id} draggableId={card.id} index={index}>
+                        {(provided, snapshot) => (
+                          <Card
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            sx={{
+                              padding: '10px',
+                              marginBottom: '10px',
+                              cursor: snapshot.isDragging ? 'grab' : 'pointer!important'
+                            }}
+                            onClick={() => setSelectedTask(card)}
+                          >
+                            <Typography>
+                              {card.title === '' ? 'Untitled' : card.title}
+                            </Typography>
+                          </Card>
+                        )}
+                      </Draggable>
+                    ))
+                    }
+                    {provided.placeholder}
+                  </Box>
+                )}
+              </Droppable>
+            </div>
+          ))
           }
         </Box>
       </DragDropContext>
