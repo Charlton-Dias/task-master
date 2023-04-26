@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import { Box } from '@mui/material'
 import Loading from '../common/Loading'
 import Sidebar from '../common/Sidebar'
-import { useSession, signIn } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
 
 interface AppLayoutProps {
   children: React.ReactNode
@@ -10,13 +11,13 @@ interface AppLayoutProps {
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const session = useSession()
+  const router = useRouter()
 
   useEffect(() => {
     if (session.status === 'unauthenticated') {
-      signIn()
-        .then(() => console.log('signed in'))
-        .catch(() => console.log('failed to sign in'))
+      void router.push('/login')
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session])
 
   return (

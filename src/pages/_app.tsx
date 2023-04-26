@@ -9,6 +9,7 @@ import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import "~/styles/custom-editor.css"
 import "~/styles/custom-scrollbar.css"
+import { useRouter } from "next/router";
 
 const theme = createTheme({
   palette: { mode: 'light' }
@@ -18,15 +19,25 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  const router = useRouter()
+
   return (
     <ThemeProvider theme={theme}>
       <SessionProvider session={session}>
-        <AppLayout>
+        <ConditionalLayout condition={router.asPath != '/login'} Layout={AppLayout}>
           <Component {...pageProps} />
-        </AppLayout>
+        </ConditionalLayout>
       </SessionProvider>
     </ThemeProvider>
   );
 };
 
 export default api.withTRPC(MyApp);
+
+const ConditionalLayout: React.FC<{
+  condition: boolean,
+  Layout: React.FC<{children: React.ReactNode}>,
+  children: React.ReactNode
+}> = ({ condition, Layout, children }) => {
+  return condition ? <Layout>{children}</Layout> : <>{children}</>;
+}
