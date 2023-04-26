@@ -7,7 +7,7 @@ import {
 
 export const boardRouter = createTRPCRouter({
   create: protectedProcedure
-    .input(z.object({ 
+    .input(z.object({
       title: z.string(),
       description: z.string(),
     }))
@@ -57,5 +57,14 @@ export const boardRouter = createTRPCRouter({
       });
     }),
 
-  
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.board.delete({
+        where: {
+          id: input.id,
+        }
+      });
+    }),
+
 });

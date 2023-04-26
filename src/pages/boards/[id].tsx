@@ -30,8 +30,16 @@ const Board = () => {
     }
   })
 
-  if (board.isLoading || !board.data)
+  const boardDeleteMutation = api.board.delete.useMutation({
+    onSuccess: () => {
+      void utils.board.invalidate()
+      void router.push('/boards')
+    }
+  })
+
+  if (board.isLoading || !board.data) {
     return <div>Loading...</div>
+  }
 
   return (
     <>
@@ -41,7 +49,7 @@ const Board = () => {
         justifyContent: 'space-between',
         width: '100%'
       }}>
-        <IconButton onClick={() => {}}>
+        <IconButton onClick={() => boardDeleteMutation.mutate({ id: board?.data?.id ?? '' })}>
           <DeleteOutlinedIcon />
         </IconButton>
       </Box>
