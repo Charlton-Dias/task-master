@@ -28,7 +28,10 @@ export const listRouter = createTRPCRouter({
     .query(({ input, ctx }) => {
       return ctx.prisma.list.findMany({
         where: { boardId: input.boardId },
-        orderBy: { order: "asc" }
+        orderBy: { order: "asc" },
+        include: {
+          cards: true
+        }
       });
     }),
 

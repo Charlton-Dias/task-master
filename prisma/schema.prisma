@@ -75,7 +75,7 @@ model Board {
     description String
     members     String[] @default([])
     creator     String
-    user        User     @relation(fields: [creator], references: [id], onDelete: Cascade)
+    user        User     @relation(fields: [creator], references: [id])
     List        List[]
 }
 
@@ -98,18 +98,20 @@ model List {
     updatedAt DateTime @updatedAt
     board     Board    @relation(fields: [boardId], references: [id])
     User      User     @relation(fields: [userId], references: [id])
+    cards     Card[]
 }
 
 model Card {
-    c_id        String   @id @default(uuid())
-    due_date    DateTime
-    list_id     String
+    id          String   @id @default(uuid())
+    due_date    DateTime?
+    listId      String
     title       String
-    labels      String
-    description String
+    labels      String[]
+    description String?
     members     String[]
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
+    list        List     @relation(fields: [listId], references: [id])
 }
 
 model Checklist {

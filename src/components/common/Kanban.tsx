@@ -94,8 +94,6 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
     // }, timeout);
   }
 
-
-
   const onUpdateTask = (task) => {
     // const newData = [...data]
     // const sectionIndex = newData.findIndex(e => e.id === task.section.id)
@@ -139,9 +137,9 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
           overflowX: 'auto'
         }}>
           {
-            lists.data?.map(section => (
-              <div key={section.id} style={{ width: '300px' }}>
-                <Droppable key={section.id} droppableId={section.id}>
+            lists.data?.map(list => (
+              <div key={list.id} style={{ width: '300px' }}>
+                <Droppable key={list.id} droppableId={list.id}>
                   {(provided) => (
                     <Box
                       ref={provided.innerRef}
@@ -149,10 +147,10 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
                       sx={{ width: '300px', padding: '10px', marginRight: '10px' }}
                     >
 
-                      <SectionHeader section={section} />
+                      <SectionHeader list={list} />
 
-                      {/* {section.tasks.map((task, index) => (
-                        <Draggable key={task.id} draggableId={task.id} index={index}>
+                      {list.cards?.map((card, index) => (
+                        <Draggable key={card.id} draggableId={card.id} index={index}>
                           {(provided, snapshot) => (
                             <Card
                               ref={provided.innerRef}
@@ -166,13 +164,13 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
                             // onClick={() => setSelectedTask(task)}
                             >
                               <Typography>
-                                {task.title === '' ? 'Untitled' : task.title}
+                                {card.title === '' ? 'Untitled' : card.title}
                               </Typography>
                             </Card>
                           )}
                         </Draggable>
                       ))
-                      } */}
+                      }
                       {provided.placeholder}
                     </Box>
                   )}
@@ -195,36 +193,30 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
 
 export default Kanban
 
-interface SectionHeaderProps {
-  section: RouterOutputs['list']['getAll'][0]
+interface ListHeaderProps {
+  list: RouterOutputs['list']['getAll'][0]
 }
 
-const SectionHeader = ({ section }: SectionHeaderProps) => {
-  const [title, setTitle] = useState(section.title);
+const SectionHeader = ({ list }: ListHeaderProps) => {
+  const [title, setTitle] = useState(list.title);
   const utils = api.useContext()
   const updateListMutation = api.list.update.useMutation({
     onSuccess: () => {
-      void utils.list.getAll.invalidate()
+      void utils.list.getAll.refetch({ boardId: list.boardId })
     }
   })
 
   const deleteListMutation = api.list.delete.useMutation({
     onSuccess: () => {
-      void utils.list.getAll.refetch()
+      void utils.list.getAll.refetch({ boardId: list.boardId })
     }
   })
 
-  const createTask = (sectionId: string) => {
-    // try {
-    //   const task = await taskApi.create(boardId, { sectionId })
-    //   const newData = [...data]
-    //   const index = newData.findIndex(e => e.id === sectionId)
-    //   newData[index].tasks.unshift(task)
-    //   setData(newData)
-    // } catch (err) {
-    //   alert(err)
-    // }
-  }
+  const createTaskCardMutation = api.card.create.useMutation({
+    onSuccess: () => {
+      void utils.list.getAll.refetch({ boardId: list.boardId })
+    }
+  })
 
   return (
     <Box sx={{
@@ -237,8 +229,8 @@ const SectionHeader = ({ section }: SectionHeaderProps) => {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onBlur={(e) => {
-          if (title !== section.title) {
-            updateListMutation.mutate({ id: section.id, title: e.target.value })
+          if (title !== list.title) {
+            updateListMutation.mutate({ id: list.id, title: e.target.value })
           }
         }}
         placeholder='Untitled'
@@ -256,7 +248,12 @@ const SectionHeader = ({ section }: SectionHeaderProps) => {
           color: 'gray',
           '&:hover': { color: 'green' }
         }}
-        onClick={() => createTask(section.id)}
+        onClick={() => {
+          createTaskCardMutation.mutate({
+            title: 'Untitled',
+            listId: list.id,
+          })
+        }}
       >
         <AddOutlinedIcon />
       </IconButton>
@@ -266,7 +263,7 @@ const SectionHeader = ({ section }: SectionHeaderProps) => {
           color: 'gray',
           '&:hover': { color: 'red' }
         }}
-        onClick={() => deleteListMutation.mutate({ id: section.id })}
+        onClick={() => deleteListMutation.mutate({ id: list.id })}
       >
         <DeleteOutlinedIcon />
       </IconButton>
