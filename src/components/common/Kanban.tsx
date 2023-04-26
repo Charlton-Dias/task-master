@@ -3,9 +3,10 @@ import { Box, Button, Typography, Divider, TextField, IconButton, Card } from '@
 import { DragDropContext, Draggable, type DropResult, Droppable } from 'react-beautiful-dnd'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
-import TaskModal from './TaskModal'
 import { type RouterOutputs, api } from '~/utils/api'
 import Loading from './Loading'
+import dynamic from 'next/dynamic'
+const TaskModal = dynamic(() => import('./TaskModal'), { ssr: false })
 
 type CardType = RouterOutputs['card']['create']
 
