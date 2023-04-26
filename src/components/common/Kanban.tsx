@@ -15,7 +15,7 @@ interface Props {
 
 const Kanban: React.FC<Props> = ({ boardId }) => {
   const [selectedTask, setSelectedTask] = useState<CardType>()
-
+  const utils = api.useContext()
   const lists = api.list.getAll.useQuery({ boardId })
 
   const createListMuration = api.list.create.useMutation({
@@ -24,41 +24,33 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
     }
   })
 
-  const onDragEnd = ({ source, destination }: DropResult) => {
-    // if (!destination) return
-    // const sourceColIndex = data.findIndex(e => e.id === source.droppableId)
-    // const destinationColIndex = data.findIndex(e => e.id === destination.droppableId)
-    // const sourceCol = data[sourceColIndex]
-    // const destinationCol = data[destinationColIndex]
+  const updateCardMutation = api.card.update.useMutation()
 
-    // const sourceSectionId = sourceCol.id
-    // const destinationSectionId = destinationCol.id
+  const onDragEnd = ({ source, destination, draggableId }: DropResult) => {
+    if (!destination) return
 
-    // const sourceTasks = [...sourceCol.tasks]
-    // const destinationTasks = [...destinationCol.tasks]
+    console.log(destination.droppableId, draggableId)
+    if (source.droppableId !== destination.droppableId) {
+      updateCardMutation.mutate({
+        id: draggableId,
+        listId: destination.droppableId
+      })
 
-    // if (source.droppableId !== destination.droppableId) {
-    //   const [removed] = sourceTasks.splice(source.index, 1)
-    //   destinationTasks.splice(destination.index, 0, removed)
-    //   data[sourceColIndex].tasks = sourceTasks
-    //   data[destinationColIndex].tasks = destinationTasks
-    // } else {
-    //   const [removed] = destinationTasks.splice(source.index, 1)
-    //   destinationTasks.splice(destination.index, 0, removed)
-    //   data[destinationColIndex].tasks = destinationTasks
-    // }
-
-    // try {
-    //   await taskApi.updatePosition(boardId, {
-    //     resourceList: sourceTasks,
-    //     destinationList: destinationTasks,
-    //     resourceSectionId: sourceSectionId,
-    //     destinationSectionId: destinationSectionId
-    //   })
-    //   setData(data)
-    // } catch (err) {
-    //   alert(err)
-    // }
+      utils.list.getAll.setData({ boardId }, prev => {
+        if (!!prev) {
+          const sourceList = prev.find(list => list.id === source.droppableId)
+          const destinationList = prev.find(list => list.id === destination.droppableId)
+          if (sourceList && destinationList) {
+            const card = sourceList.cards?.find(card => card.id === draggableId)
+            if (card) {
+              sourceList.cards = sourceList.cards?.filter(card => card.id !== draggableId)
+              destinationList.cards?.push(card)
+            }
+          }
+        }
+        return prev
+      })
+    }
   }
 
   return (
@@ -138,8 +130,6 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
           task={selectedTask}
           boardId={boardId}
           onClose={() => setSelectedTask(undefined)}
-        // onUpdate={onUpdateTask}
-        // onDelete={onDeleteTask}
         />
       }
     </>

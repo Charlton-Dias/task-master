@@ -38,6 +38,7 @@ export const cardRouter = createTRPCRouter({
       title: z.string().optional(),
       description: z.string().optional(),
       due_date: z.string().optional(),
+      listId: z.string().optional(),
     }))
     .mutation(({ input, ctx }) => {
       return ctx.prisma.card.update({
@@ -46,6 +47,7 @@ export const cardRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           due_date: input.due_date,
+          listId: input.listId,
         }
       })
     }),
