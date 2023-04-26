@@ -5,16 +5,15 @@ import { Box, IconButton, TextField } from '@mui/material'
 import { useEffect, useState } from 'react'
 import EmojiPicker from '../../components/common/EmojiPicker'
 import Kanban from '../../components/common/Kanban'
+import { useRouter } from 'next/router'
+import { api } from '~/utils/api'
 
 let timer
 const timeout = 500
 
 const Board = () => {
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [sections, setSections] = useState([])
-  const [isFavourite, setIsFavourite] = useState(false)
-  const [icon, setIcon] = useState('')
+  const router = useRouter()
+  const board = api.board.get.useQuery({ id: router.query.id as string })
 
   // useEffect(() => {
   //   const getBoard = async () => {
@@ -88,7 +87,7 @@ const Board = () => {
     // }
   }
 
-  const deleteBoard = async () => {
+  const deleteBoard = () => {
     // try {
     //   await boardApi.delete(boardId)
     //   if (isFavourite) {
@@ -108,6 +107,9 @@ const Board = () => {
     // }
   }
 
+  if (board.isLoading || !board.data) 
+    return <div>Loading...</div>
+
   return (
     <>
       <Box sx={{
@@ -116,31 +118,14 @@ const Board = () => {
         justifyContent: 'space-between',
         width: '100%'
       }}>
-        <IconButton variant='outlined' 
-        // onClick={addFavourite}
-        >
-          {
-            isFavourite ? (
-              <StarOutlinedIcon color='warning' />
-            ) : (
-              <StarBorderOutlinedIcon />
-            )
-          }
-        </IconButton>
-        <IconButton variant='outlined' color='error' 
-        // onClick={deleteBoard}
-        >
+        <IconButton onClick={deleteBoard}>
           <DeleteOutlinedIcon />
         </IconButton>
       </Box>
       <Box sx={{ padding: '10px 50px' }}>
         <Box>
-          {/* emoji picker */}
-          <EmojiPicker icon={icon} 
-          // onChange={onIconChange} 
-          />
           <TextField
-            value={title}
+            value={board.data.title}
             // onChange={updateTitle}
             placeholder='Untitled'
             variant='outlined'
@@ -152,7 +137,7 @@ const Board = () => {
             }}
           />
           <TextField
-            value={description}
+            value={board.data.description}
             // onChange={updateDescription}
             placeholder='Add a description'
             variant='outlined'
@@ -166,11 +151,8 @@ const Board = () => {
           />
         </Box>
         <Box>
-          {/* Kanban board */}
-          <Kanban data={sections} 
-          // boardId={boardId}
-           />
-        </Box>
+          {/* <Kanban data={sections} boardId={boardId}/>*/}
+        </Box> 
       </Box>
     </>
   )

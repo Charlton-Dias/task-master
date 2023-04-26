@@ -29,4 +29,13 @@ export const boardRouter = createTRPCRouter({
     });
   }),
 
+  get: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ input, ctx }) => {
+      return ctx.prisma.board.findUnique({
+        where: {
+          id: input.id,
+        }
+      });
+    }),
 });

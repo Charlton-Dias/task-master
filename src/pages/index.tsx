@@ -18,8 +18,8 @@ const Home = () => {
         onClick={() => mutation.mutate({
           title: 'Untitled',
           description: `Add description here
-          🟢 You can add multiline description
-          🟢 Let's start...`
+🟢 You can add multiline description
+🟢 Let's start...`
         })}
         loading={mutation.isLoading}
       >
