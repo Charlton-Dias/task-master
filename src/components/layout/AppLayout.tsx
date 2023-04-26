@@ -26,7 +26,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       <Box sx={{
         display: 'flex'
       }}>
-        {/* <Sidebar /> */}
+        <Sidebar />
         <Box sx={{
           flexGrow: 1,
           p: 1,
