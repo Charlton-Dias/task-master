@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Box, Button, Typography, Divider, TextField, IconButton, Card } from '@mui/material'
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import { DragDropContext, Draggable, type DropResult, Droppable } from 'react-beautiful-dnd'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import TaskModal from './TaskModal'
@@ -23,7 +23,7 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
     }
   })
 
-  const onDragEnd = async ({ source, destination }) => {
+  const onDragEnd = ({ source, destination }: DropResult) => {
     // if (!destination) return
     // const sourceColIndex = data.findIndex(e => e.id === source.droppableId)
     // const destinationColIndex = data.findIndex(e => e.id === destination.droppableId)
@@ -58,57 +58,6 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
     // } catch (err) {
     //   alert(err)
     // }
-  }
-
-  const createSection = async () => {
-    // try {
-    //   const section = await sectionApi.create(boardId)
-    //   setData([...data, section])
-    // } catch (err) {
-    //   alert(err)
-    // }
-  }
-
-  const deleteSection = async (sectionId) => {
-    // try {
-    //   await sectionApi.delete(boardId, sectionId)
-    //   const newData = [...data].filter(e => e.id !== sectionId)
-    //   setData(newData)
-    // } catch (err) {
-    //   alert(err)
-    // }
-  }
-
-  const updateSectionTitle = async (e, sectionId) => {
-    // clearTimeout(timer)
-    // const newTitle = e.target.value
-    // const newData = [...data]
-    // const index = newData.findIndex(e => e.id === sectionId)
-    // newData[index].title = newTitle
-    // setData(newData)
-    // timer = setTimeout(async () => {
-    //   try {
-    //     await sectionApi.update(boardId, sectionId, { title: newTitle })
-    //   } catch (err) {
-    //     alert(err)
-    //   }
-    // }, timeout);
-  }
-
-  const onUpdateTask = (task) => {
-    // const newData = [...data]
-    // const sectionIndex = newData.findIndex(e => e.id === task.section.id)
-    // const taskIndex = newData[sectionIndex].tasks.findIndex(e => e.id === task.id)
-    // newData[sectionIndex].tasks[taskIndex] = task
-    // setData(newData)
-  }
-
-  const onDeleteTask = (task) => {
-    // const newData = [...data]
-    // const sectionIndex = newData.findIndex(e => e.id === task.section.id)
-    // const taskIndex = newData[sectionIndex].tasks.findIndex(e => e.id === task.id)
-    // newData[sectionIndex].tasks.splice(taskIndex, 1)
-    // setData(newData)
   }
 
   return (

@@ -4,8 +4,6 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import Moment from 'moment'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-
-// import '../../css/custom-editor.css'
 import { type RouterOutputs, api } from '~/utils/api'
 
 const modalStyle = {
@@ -43,57 +41,11 @@ const TaskModal: React.FC<Props> = ({ task, boardId, onClose }) => {
     }
   })
 
-  const updateEditorHeight = () => {
-    //   setTimeout(() => {
-    //     if (editorWrapperRef.current) {
-    //       const box = editorWrapperRef.current
-    //       box.querySelector('.ck-editor__editable_inline').style.height = (box.offsetHeight - 50) + 'px'
-    //     }
-    //   }, timeout)
-  }
-
-  // const onClose = () => {
-  // isModalClosed = true
-  // props.onUpdate(task)
-  // props.onClose()
-  // }
-
-  const updateTitle = async (e) => {
-    //   clearTimeout(timer)
-    //   const newTitle = e.target.value
-    //   timer = setTimeout(async () => {
-    //     try {
-    //       await taskApi.update(boardId, task.id, { title: newTitle })
-    //     } catch (err) {
-    //       alert(err)
-    //     }
-    //   }, timeout)
-
-    //   task.title = newTitle
-    //   setTitle(newTitle)
-    //   props.onUpdate(task)
-  }
-
-  const updateContent = async (event, editor) => {
-    //   clearTimeout(timer)
-    //   const data = editor.getData()
-
-    //   console.log({ isModalClosed })
-
-    //   if (!isModalClosed) {
-    //     timer = setTimeout(async () => {
-    //       try {
-    //         await taskApi.update(boardId, task.id, { content: data })
-    //       } catch (err) {
-    //         alert(err)
-    //       }
-    //     }, timeout);
-
-    //     task.content = data
-    //     setContent(data)
-    //     props.onUpdate(task)
-    //   }
-  }
+  const updateCardMutation = api.card.update.useMutation({
+    onSuccess: () => {
+      void utils.list.getAll.refetch({ boardId })
+    }
+  })
 
   return (
     <Modal
@@ -122,6 +74,7 @@ const TaskModal: React.FC<Props> = ({ task, boardId, onClose }) => {
             <TextField
               value={title}
               onChange={e => setTitle(e.target.value)}
+              onBlur={() => updateCardMutation.mutate({ id: task.id, title })}
               placeholder='Untitled'
               variant='outlined'
               fullWidth
@@ -149,9 +102,10 @@ const TaskModal: React.FC<Props> = ({ task, boardId, onClose }) => {
               <CKEditor
                 editor={ClassicEditor}
                 data={content}
-                // onChange={updateContent}
-                onFocus={updateEditorHeight}
-                onBlur={updateEditorHeight}
+                onChange={(e, editor) => setContent(editor.getData())}
+                onBlur={(e, editor) => {
+                  updateCardMutation.mutate({ id: task.id, description: editor.getData() })
+                }}
               />
             </Box>
           </Box>

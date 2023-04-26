@@ -21,7 +21,7 @@ export const cardRouter = createTRPCRouter({
         }
       })
     }),
-  
+
   delete: protectedProcedure
     .input(z.object({
       id: z.string(),
@@ -29,6 +29,24 @@ export const cardRouter = createTRPCRouter({
     .mutation(({ input, ctx }) => {
       return ctx.prisma.card.delete({
         where: { id: input.id }
+      })
+    }),
+
+  update: protectedProcedure
+    .input(z.object({
+      id: z.string(),
+      title: z.string().optional(),
+      description: z.string().optional(),
+      due_date: z.string().optional(),
+    }))
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.card.update({
+        where: { id: input.id },
+        data: {
+          title: input.title,
+          description: input.description,
+          due_date: input.due_date,
+        }
       })
     }),
 })
