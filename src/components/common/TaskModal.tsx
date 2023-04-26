@@ -5,6 +5,7 @@ import Moment from 'moment'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { type RouterOutputs, api } from '~/utils/api'
+import Comments from './Comments'
 
 const modalStyle = {
   outline: 'none',
@@ -17,7 +18,8 @@ const modalStyle = {
   border: '0px solid #000',
   boxShadow: 24,
   p: 1,
-  height: '80%'
+  height: '80%',
+  overflow: 'auto'
 }
 
 type TaskType = RouterOutputs['card']['create']
@@ -69,7 +71,7 @@ const TaskModal: React.FC<Props> = ({ task, boardId, onClose }) => {
             display: 'flex',
             height: '100%',
             flexDirection: 'column',
-            padding: '2rem 5rem 5rem'
+            padding: '2rem 3rem 5rem'
           }}>
             <TextField
               value={title}
@@ -108,6 +110,8 @@ const TaskModal: React.FC<Props> = ({ task, boardId, onClose }) => {
                 }}
               />
             </Box>
+
+            <Comments cardId={task.id} />
           </Box>
         </Box>
       </Fade>

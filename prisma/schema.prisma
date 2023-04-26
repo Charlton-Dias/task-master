@@ -57,6 +57,7 @@ model User {
     sessions      Session[]
     Board         Board[]
     List          List[]
+    Comment       Comment[]
 }
 
 model VerificationToken {
@@ -102,16 +103,16 @@ model List {
 }
 
 model Card {
-    id          String   @id @default(uuid())
+    id          String    @id @default(uuid())
     due_date    DateTime?
     listId      String
     title       String
     labels      String[]
     description String?
     members     String[]
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    list        List     @relation(fields: [listId], references: [id])
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    list        List      @relation(fields: [listId], references: [id])
 }
 
 model Checklist {
@@ -134,9 +135,10 @@ model Label {
 
 model Comment {
     id        String   @id @default(uuid())
-    card_id   String
+    cardId    String
     text      String
     creator   String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    user      User     @relation(fields: [creator], references: [id])
 }
