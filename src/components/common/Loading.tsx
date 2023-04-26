@@ -1,6 +1,10 @@
 import { Box, CircularProgress } from '@mui/material'
 
-const Loading = props => {
+interface Props {
+  fullHeight?: boolean
+}
+
+const Loading: React.FC<Props> = props => {
   return (
     <Box sx={{
       display: 'flex',
