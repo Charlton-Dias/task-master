@@ -1,6 +1,4 @@
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
-import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined'
-import StarOutlinedIcon from '@mui/icons-material/StarOutlined'
 import { Box, IconButton, TextField } from '@mui/material'
 import Kanban from '../../components/common/Kanban'
 import { useRouter } from 'next/router'
@@ -98,7 +96,7 @@ const Board = () => {
           />
         </Box>
         <Box>
-          {/* <Kanban data={sections} boardId={boardId}/>*/}
+          <Kanban boardId={board?.data?.id ?? ''} />
         </Box>
       </Box>
     </>

@@ -56,6 +56,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     Board         Board[]
+    List          List[]
 }
 
 model VerificationToken {
@@ -75,6 +76,7 @@ model Board {
     members     String[] @default([])
     creator     String
     user        User     @relation(fields: [creator], references: [id], onDelete: Cascade)
+    List        List[]
 }
 
 model Members {
@@ -89,10 +91,13 @@ model Members {
 model List {
     id        String   @id @default(uuid())
     title     String
-    order     String
-    board_id  String
+    order     Int
+    boardId   String
+    userId    String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    board     Board    @relation(fields: [boardId], references: [id])
+    User      User     @relation(fields: [userId], references: [id])
 }
 
 model Card {
