@@ -38,4 +38,24 @@ export const boardRouter = createTRPCRouter({
         }
       });
     }),
+
+  update: protectedProcedure
+    .input(z.object({
+      id: z.string(),
+      title: z.string().optional(),
+      description: z.string().optional(),
+    }))
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.board.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          title: input.title,
+          description: input.description,
+        }
+      });
+    }),
+
+  
 });
