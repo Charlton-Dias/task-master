@@ -71,7 +71,7 @@ const Board = () => {
             fullWidth
             sx={{
               '& .MuiOutlinedInput-input': { padding: 0 },
-              '& .MuiOutlinedInput-notchedOutline': { border: 'unset ' },
+              '& .MuiOutlinedInput-notchedOutline': { border: 'unset' },
               '& .MuiOutlinedInput-root': { fontSize: '2rem', fontWeight: '700' }
             }}
           />
@@ -93,7 +93,7 @@ const Board = () => {
             sx={{
               '& .MuiOutlinedInput-input': { padding: 0 },
               '& .MuiOutlinedInput-notchedOutline': { border: 'unset ' },
-              '& .MuiOutlinedInput-root': { fontSize: '0.8rem' }
+              '& .MuiOutlinedInput-root': { fontSize: '0.8rem', px: 0 }
             }}
           />
         </Box>
