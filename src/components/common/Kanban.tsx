@@ -4,15 +4,16 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import TaskModal from './TaskModal'
-import { RouterOutputs, api } from '~/utils/api'
+import { type RouterOutputs, api } from '~/utils/api'
 
+type CardType = RouterOutputs['card']['create']
 
 interface Props {
   boardId: string
 }
 
 const Kanban: React.FC<Props> = ({ boardId }) => {
-  const [selectedTask, setSelectedTask] = useState(undefined)
+  const [selectedTask, setSelectedTask] = useState<CardType>()
 
   const lists = api.list.getAll.useQuery({ boardId })
 
@@ -161,7 +162,7 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
                                 marginBottom: '10px',
                                 cursor: snapshot.isDragging ? 'grab' : 'pointer!important'
                               }}
-                            // onClick={() => setSelectedTask(task)}
+                              onClick={() => setSelectedTask(card)}
                             >
                               <Typography>
                                 {card.title === '' ? 'Untitled' : card.title}
@@ -180,13 +181,15 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
           }
         </Box>
       </DragDropContext>
-      {/* <TaskModal
-        task={selectedTask}
-        // boardId={boardId}
-        // onClose={() => setSelectedTask(undefined)}
+      {(selectedTask !== undefined) &&
+        <TaskModal
+          task={selectedTask}
+          boardId={boardId}
+          onClose={() => setSelectedTask(undefined)}
         // onUpdate={onUpdateTask}
         // onDelete={onDeleteTask}
-      /> */}
+        />
+      }
     </>
   )
 }

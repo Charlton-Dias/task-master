@@ -1,12 +1,12 @@
-import { Backdrop, Fade, IconButton, Modal, Box, TextField, Typography, Divider } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
+import { Fade, IconButton, Modal, Box, TextField, Typography, Divider } from '@mui/material'
+import React, { useRef, useState } from 'react'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import Moment from 'moment'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-// import taskApi from '../../api/taskApi'
 
 // import '../../css/custom-editor.css'
+import { type RouterOutputs, api } from '~/utils/api'
 
 const modalStyle = {
   outline: 'none',
@@ -22,97 +22,84 @@ const modalStyle = {
   height: '80%'
 }
 
-let timer
-const timeout = 500
-let isModalClosed = false
+type TaskType = RouterOutputs['card']['create']
 
-const TaskModal = props => {
-  const boardId = props.boardId
-  const [task, setTask] = useState(props.task)
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
+interface Props {
+  task: TaskType,
+  boardId: string,
+  onClose: () => void
+}
+
+const TaskModal: React.FC<Props> = ({ task, boardId, onClose }) => {
   const editorWrapperRef = useRef()
+  const utils = api.useContext()
+  const [title, setTitle] = useState(task.title)
+  const [content, setContent] = useState(task.description)
 
-  useEffect(() => {
-    setTask(props.task)
-    setTitle(props.task !== undefined ? props.task.title : '')
-    setContent(props.task !== undefined ? props.task.content : '')
-    if (props.task !== undefined) {
-      isModalClosed = false
-
-      updateEditorHeight()
+  const deleteCardMutation = api.card.delete.useMutation({
+    onSuccess: () => {
+      void utils.list.getAll.refetch({ boardId })
+      onClose()
     }
-  }, [props.task])
+  })
 
   const updateEditorHeight = () => {
-    setTimeout(() => {
-      if (editorWrapperRef.current) {
-        const box = editorWrapperRef.current
-        box.querySelector('.ck-editor__editable_inline').style.height = (box.offsetHeight - 50) + 'px'
-      }
-    }, timeout)
+    //   setTimeout(() => {
+    //     if (editorWrapperRef.current) {
+    //       const box = editorWrapperRef.current
+    //       box.querySelector('.ck-editor__editable_inline').style.height = (box.offsetHeight - 50) + 'px'
+    //     }
+    //   }, timeout)
   }
 
-  const onClose = () => {
-    isModalClosed = true
-    props.onUpdate(task)
-    props.onClose()
+  // const onClose = () => {
+  // isModalClosed = true
+  // props.onUpdate(task)
+  // props.onClose()
+  // }
+
+  const updateTitle = async (e) => {
+    //   clearTimeout(timer)
+    //   const newTitle = e.target.value
+    //   timer = setTimeout(async () => {
+    //     try {
+    //       await taskApi.update(boardId, task.id, { title: newTitle })
+    //     } catch (err) {
+    //       alert(err)
+    //     }
+    //   }, timeout)
+
+    //   task.title = newTitle
+    //   setTitle(newTitle)
+    //   props.onUpdate(task)
   }
 
-  // const deleteTask = async () => {
-  //   try {
-  //     await taskApi.delete(boardId, task.id)
-  //     props.onDelete(task)
-  //     setTask(undefined)
-  //   } catch (err) {
-  //     alert(err)
-  //   }
-  // }
+  const updateContent = async (event, editor) => {
+    //   clearTimeout(timer)
+    //   const data = editor.getData()
 
-  // const updateTitle = async (e) => {
-  //   clearTimeout(timer)
-  //   const newTitle = e.target.value
-  //   timer = setTimeout(async () => {
-  //     try {
-  //       await taskApi.update(boardId, task.id, { title: newTitle })
-  //     } catch (err) {
-  //       alert(err)
-  //     }
-  //   }, timeout)
+    //   console.log({ isModalClosed })
 
-  //   task.title = newTitle
-  //   setTitle(newTitle)
-  //   props.onUpdate(task)
-  // }
+    //   if (!isModalClosed) {
+    //     timer = setTimeout(async () => {
+    //       try {
+    //         await taskApi.update(boardId, task.id, { content: data })
+    //       } catch (err) {
+    //         alert(err)
+    //       }
+    //     }, timeout);
 
-  // const updateContent = async (event, editor) => {
-  //   clearTimeout(timer)
-  //   const data = editor.getData()
-
-  //   console.log({ isModalClosed })
-
-  //   if (!isModalClosed) {
-  //     timer = setTimeout(async () => {
-  //       try {
-  //         await taskApi.update(boardId, task.id, { content: data })
-  //       } catch (err) {
-  //         alert(err)
-  //       }
-  //     }, timeout);
-
-  //     task.content = data
-  //     setContent(data)
-  //     props.onUpdate(task)
-  //   }
-  // }
+    //     task.content = data
+    //     setContent(data)
+    //     props.onUpdate(task)
+    //   }
+  }
 
   return (
     <Modal
       open={task !== undefined}
       onClose={onClose}
       closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{ timeout: 500 }}
     >
       <Fade in={task !== undefined}>
         <Box sx={modalStyle}>
@@ -122,7 +109,7 @@ const TaskModal = props => {
             justifyContent: 'flex-end',
             width: '100%'
           }}>
-            <IconButton variant='outlined' color='error' onClick={deleteTask}>
+            <IconButton color='error' onClick={() => deleteCardMutation.mutate({ id: task.id })}>
               <DeleteOutlinedIcon />
             </IconButton>
           </Box>
@@ -134,7 +121,7 @@ const TaskModal = props => {
           }}>
             <TextField
               value={title}
-              // onChange={updateTitle}
+              onChange={e => setTitle(e.target.value)}
               placeholder='Untitled'
               variant='outlined'
               fullWidth
