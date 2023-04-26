@@ -35,7 +35,7 @@ const Sidebar = () => {
         sx={{
           width: sidebarWidth,
           height: '100vh',
-          // backgroundColor: assets.colors.secondary
+          backgroundColor: '#f7f7f7'
         }}
       >
         <ListItem>
