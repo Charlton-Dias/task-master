@@ -3,13 +3,11 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import AppLayout from "~/components/layout/AppLayout";
 import { ThemeProvider, createTheme } from '@mui/material/styles'
-
+import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 
-import "~/styles/globals.css";
-import "~/styles/custom-editor.css"
+import "~/styles/globals.css"
 import "~/styles/custom-scrollbar.css"
-import { useRouter } from "next/router";
 
 const theme = createTheme({
   palette: { mode: 'light' }
