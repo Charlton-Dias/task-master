@@ -22,7 +22,7 @@ export default function Comments({ cardId }: Props) {
       <Typography variant='h6'>Comments</Typography>
       <Box>
         {comments.data?.map(comment => (
-          <Box key={comment.id} sx={{ display: 'flex', flexDirection: 'column', my: 1 }}>
+          <Box key={comment.id} sx={{ display: 'flex', flexDirection: 'column', my: 1, bgcolor: '#e6e6e6', px: '.5rem' }}>
             <Typography variant='body1'>{comment.text}</Typography>
             <Stack direction='row' justifyContent='space-between'>
               <Typography variant='caption'>{comment.user.name}</Typography>
