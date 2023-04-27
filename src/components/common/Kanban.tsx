@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Button, Typography, Divider, TextField, IconButton, Card } from '@mui/material'
+import { Box, Button, Typography, Divider, TextField, IconButton, Card, CircularProgress } from '@mui/material'
 import { DragDropContext, Draggable, type DropResult, Droppable } from 'react-beautiful-dnd'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
@@ -7,6 +7,8 @@ import { type RouterOutputs, api } from '~/utils/api'
 import Loading from './Loading'
 import dynamic from 'next/dynamic'
 const TaskModal = dynamic(() => import('./TaskModal'), { ssr: false })
+import AddIcon from '@mui/icons-material/Add'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 type CardType = RouterOutputs['card']['create']
 
@@ -61,13 +63,19 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
         alignItems: 'center',
         justifyContent: 'space-between'
       }}>
-        <Button onClick={() => {
-          if (!!lists.data) {
-            createListMuration.mutate({ boardId, title: 'Untitled', order: lists.data.length })
-          }
-        }}>
+        <LoadingButton
+          loading={createListMuration.isLoading}
+          loadingPosition="start"
+          startIcon={<AddIcon />}
+          color='primary'
+          onClick={() => {
+            if (!!lists.data) {
+              createListMuration.mutate({ boardId, title: 'Untitled', order: lists.data.length })
+            }
+          }}
+        >
           Add section
-        </Button>
+        </LoadingButton>
         <Typography variant='body2' fontWeight='700'>
           {lists?.data?.length ?? 0} Sections
         </Typography>
@@ -201,7 +209,10 @@ const SectionHeader = ({ list }: ListHeaderProps) => {
           })
         }}
       >
-        <AddOutlinedIcon />
+        {createTaskCardMutation.isLoading
+          ? <CircularProgress size={18} color='success' />
+          : <AddOutlinedIcon />
+        }
       </IconButton>
       <IconButton
         size='small'
@@ -211,7 +222,10 @@ const SectionHeader = ({ list }: ListHeaderProps) => {
         }}
         onClick={() => deleteListMutation.mutate({ id: list.id })}
       >
-        <DeleteOutlinedIcon />
+        {deleteListMutation.isLoading
+          ? <CircularProgress size={18} color='error' />
+          : <DeleteOutlinedIcon />
+        }
       </IconButton>
     </Box>
   )

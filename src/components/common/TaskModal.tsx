@@ -1,4 +1,4 @@
-import { Fade, IconButton, Modal, Box, TextField, Typography, Divider } from '@mui/material'
+import { Fade, IconButton, Modal, Box, TextField, Typography, Divider, CircularProgress } from '@mui/material'
 import React, { useRef, useState } from 'react'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import Moment from 'moment'
@@ -64,7 +64,10 @@ const TaskModal: React.FC<Props> = ({ task, boardId, onClose }) => {
             width: '100%'
           }}>
             <IconButton color='error' onClick={() => deleteCardMutation.mutate({ id: task.id })}>
-              <DeleteOutlinedIcon />
+              {deleteCardMutation.isLoading
+                ? <CircularProgress color='error' size={18} />
+                : <DeleteOutlinedIcon />
+              }
             </IconButton>
           </Box>
           <Box sx={{

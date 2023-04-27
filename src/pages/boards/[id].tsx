@@ -1,5 +1,5 @@
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
-import { Box, IconButton, TextField } from '@mui/material'
+import { Box, CircularProgress, IconButton, TextField } from '@mui/material'
 import Kanban from '../../components/common/Kanban'
 import { useRouter } from 'next/router'
 import { api } from '~/utils/api'
@@ -34,7 +34,7 @@ const Board = () => {
   const boardDeleteMutation = api.board.delete.useMutation({
     onSuccess: () => {
       void utils.board.invalidate()
-      void router.push('/boards')
+      void router.push('/')
     }
   })
 
@@ -55,7 +55,10 @@ const Board = () => {
           <>
             <AddMemberModal boardId={board?.data?.id ?? ''} />
             <IconButton title='Delete Board' onClick={() => boardDeleteMutation.mutate({ id: board?.data?.id ?? '' })}>
-              <DeleteOutlinedIcon />
+              {boardDeleteMutation.isLoading
+                ? <CircularProgress color='error' size={18} />
+                : <DeleteOutlinedIcon />
+              }
             </IconButton>
           </>
         )
