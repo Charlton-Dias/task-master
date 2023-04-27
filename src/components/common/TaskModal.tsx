@@ -98,12 +98,7 @@ const TaskModal: React.FC<Props> = ({ task, boardId, onClose }) => {
             <Divider sx={{ margin: '1.5rem 0' }} />
             <Box
               ref={editorWrapperRef}
-              sx={{
-                position: 'relative',
-                height: '80%',
-                overflowX: 'hidden',
-                overflowY: 'auto'
-              }}
+              sx={{ position: 'relative' }}
             >
               <CKEditor
                 editor={ClassicEditor}

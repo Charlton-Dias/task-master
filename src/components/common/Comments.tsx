@@ -18,7 +18,7 @@ export default function Comments({ cardId }: Props) {
   })
 
   return (
-    <Box>
+    <Box pb='2rem'>
       <Typography variant='h6'>Comments</Typography>
       <Box>
         {comments.data?.map(comment => (
