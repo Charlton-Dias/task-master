@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Typography, Divider, TextField, IconButton, Card, CircularProgress } from '@mui/material'
+import { Box, Typography, Divider, TextField, IconButton, Card, CircularProgress, AvatarGroup, Avatar, Stack } from '@mui/material'
 import { DragDropContext, Draggable, type DropResult, Droppable } from 'react-beautiful-dnd'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
@@ -9,14 +9,16 @@ import dynamic from 'next/dynamic'
 const TaskModal = dynamic(() => import('./TaskModal'), { ssr: false })
 import AddIcon from '@mui/icons-material/Add'
 import LoadingButton from '@mui/lab/LoadingButton'
+import type { User } from '@prisma/client'
 
 type CardType = RouterOutputs['card']['create']
 
 interface Props {
-  boardId: string
+  boardId: string,
+  members: User[]
 }
 
-const Kanban: React.FC<Props> = ({ boardId }) => {
+const Kanban: React.FC<Props> = ({ boardId, members }) => {
   const [selectedTask, setSelectedTask] = useState<CardType>()
   const utils = api.useContext()
   const lists = api.list.getAll.useQuery({ boardId })
@@ -76,9 +78,17 @@ const Kanban: React.FC<Props> = ({ boardId }) => {
         >
           Add section
         </LoadingButton>
-        <Typography variant='body2' fontWeight='700'>
-          {lists?.data?.length ?? 0} Sections
-        </Typography>
+        <Stack direction='row' alignItems='center' gap={1}>
+          <Typography variant='body2' fontWeight='700'>
+            {lists?.data?.length ?? 0} Sections
+          </Typography>
+          <AvatarGroup max={4}>
+            {members.map((member, idx) => (
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              <Avatar key={idx} alt={member.name!} src={member.image!} sx={{ width: 30, height: 30 }} />
+            ))}
+          </AvatarGroup>
+        </Stack>
       </Box>
       <Divider sx={{ margin: '10px 0' }} />
 

@@ -109,7 +109,7 @@ const Board = () => {
           />
         </Box>
         <Box>
-          <Kanban boardId={board?.data?.id ?? ''} />
+          <Kanban boardId={board?.data?.id ?? ''} members={board?.data?.members ?? []} />
         </Box>
       </Box>
     </>
