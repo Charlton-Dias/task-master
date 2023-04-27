@@ -6,6 +6,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { type RouterOutputs, api } from '~/utils/api'
 import Comments from './Comments'
+import Checklist from './Checklist'
 
 const modalStyle = {
   outline: 'none',
@@ -114,6 +115,7 @@ const TaskModal: React.FC<Props> = ({ task, boardId, onClose }) => {
               />
             </Box>
 
+            <Checklist cardId={task.id} />
             <Comments cardId={task.id} />
           </Box>
         </Box>

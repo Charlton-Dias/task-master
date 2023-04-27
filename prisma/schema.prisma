@@ -103,25 +103,27 @@ model List {
 }
 
 model Card {
-    id          String    @id @default(uuid())
+    id          String      @id @default(uuid())
     due_date    DateTime?
     listId      String
     title       String
     labels      String[]
     description String?
     members     String[]
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
-    list        List      @relation(fields: [listId], references: [id])
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+    list        List        @relation(fields: [listId], references: [id])
+    checklist   Checklist[]
 }
 
 model Checklist {
     id        String   @id @default(uuid())
-    card_id   String
+    cardId    String
     title     String
-    is_done   String
+    isDone    Boolean  @default(false)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    card      Card     @relation(fields: [cardId], references: [id])
 }
 
 model Label {
