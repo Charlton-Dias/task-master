@@ -55,9 +55,9 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    Board         Board[]
     List          List[]
     Comment       Comment[]
+    Boards         Board[]
 }
 
 model VerificationToken {
@@ -74,9 +74,8 @@ model Board {
     created_at  DateTime @default(now())
     updated_at  DateTime @updatedAt
     description String
-    members     String[] @default([])
+    members     User[]
     creator     String
-    user        User     @relation(fields: [creator], references: [id])
     List        List[]
 }
 

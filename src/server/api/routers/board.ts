@@ -17,6 +17,11 @@ export const boardRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           creator: ctx.session.user.id,
+          members: {
+            connect: {
+              id: ctx.session.user.id,
+            }
+          }
         }
       })
     }),
@@ -35,6 +40,9 @@ export const boardRouter = createTRPCRouter({
       return ctx.prisma.board.findUnique({
         where: {
           id: input.id,
+        },
+        include: {
+          members: true,
         }
       });
     }),
@@ -85,7 +93,9 @@ export const boardRouter = createTRPCRouter({
         where: { id: input.id },
         data: {
           members: {
-            push: user.id,
+            connect: {
+              id: user.id,
+            }
           }
         }
       });
