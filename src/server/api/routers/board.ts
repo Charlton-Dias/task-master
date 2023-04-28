@@ -29,7 +29,14 @@ export const boardRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.board.findMany({
       where: {
-        creator: ctx.session.user.id,
+        OR: [
+          { creator: ctx.session.user.id },
+          {
+            members: {
+              some: { id: ctx.session.user.id }
+            }
+          }
+        ]
       }
     });
   }),
