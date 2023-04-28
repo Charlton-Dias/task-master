@@ -1,4 +1,4 @@
-import { Fade, IconButton, Modal, Box, TextField, Typography, Divider, CircularProgress } from '@mui/material'
+import { Fade, IconButton, Modal, Box, TextField, Typography, Divider, CircularProgress, Stack, AvatarGroup, Avatar } from '@mui/material'
 import React, { useRef, useState } from 'react'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import Moment from 'moment'
@@ -7,6 +7,8 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { type RouterOutputs, api } from '~/utils/api'
 import Comments from './Comments'
 import Checklist from './Checklist'
+import AddMembersToCard from './AddMembersToCard'
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 const modalStyle = {
   outline: 'none',
@@ -36,6 +38,11 @@ const TaskModal: React.FC<Props> = ({ task, boardId, onClose }) => {
   const utils = api.useContext()
   const [title, setTitle] = useState(task.title)
   const [content, setContent] = useState(task.description)
+  const [showAddMemberField, setShowAddMemberField] = useState(false)
+
+  const taskQuery = api.card.get.useQuery({ id: task.id }, {
+    initialData: task
+  })
 
   const deleteCardMutation = api.card.delete.useMutation({
     onSuccess: () => {
@@ -92,10 +99,30 @@ const TaskModal: React.FC<Props> = ({ task, boardId, onClose }) => {
                 marginBottom: '10px'
               }}
             />
-            <Typography variant='body2' fontWeight='700'>
-              {task !== undefined ? Moment(task.createdAt).format('YYYY-MM-DD') : ''}
-            </Typography>
-            <Divider sx={{ margin: '1.5rem 0' }} />
+
+            <Stack direction='row' alignItems='center' justifyContent='space-between' spacing={1}>
+              <Typography variant='body2' fontWeight='700'>
+                {task !== undefined ? Moment(task.createdAt).format('YYYY-MM-DD') : ''}
+              </Typography>
+
+              <Stack direction='row' alignItems='center'>
+                <AvatarGroup max={4}>
+                  {taskQuery.data?.members?.map((member, idx) => (
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    <Avatar key={idx} alt={member.name!} src={member.image!} sx={{ width: 30, height: 30 }} title={member.name!} />
+                  ))}
+                </AvatarGroup>
+                <IconButton title='Assign Member to Task' onClick={() => setShowAddMemberField(_v => !_v)}>
+                  <PersonAddIcon />
+                </IconButton>
+              </Stack>
+            </Stack>
+            <Divider sx={{ margin: '1.5rem 0', mt: 0 }} />
+
+            {showAddMemberField &&
+              <AddMembersToCard boardId={boardId} cardId={task.id} onSuccess={() => { setShowAddMemberField(false) }} />
+            }
+
             <Box
               ref={editorWrapperRef}
               sx={{ position: 'relative' }}

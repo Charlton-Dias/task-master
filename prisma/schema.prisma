@@ -57,7 +57,8 @@ model User {
     sessions      Session[]
     List          List[]
     Comment       Comment[]
-    Boards         Board[]
+    Boards        Board[]
+    Cards         Card[]
 }
 
 model VerificationToken {
@@ -108,7 +109,7 @@ model Card {
     title       String
     labels      String[]
     description String?
-    members     String[]
+    members     User[]
     createdAt   DateTime    @default(now())
     updatedAt   DateTime    @updatedAt
     list        List        @relation(fields: [listId], references: [id])

@@ -22,6 +22,19 @@ export const cardRouter = createTRPCRouter({
       })
     }),
 
+  get: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ input, ctx }) => {
+      return ctx.prisma.card.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          members: true,
+        }
+      });
+    }),
+
   delete: protectedProcedure
     .input(z.object({
       id: z.string(),
@@ -51,4 +64,20 @@ export const cardRouter = createTRPCRouter({
         }
       })
     }),
+
+  addMember: protectedProcedure
+    .input(z.object({
+      id: z.string(),
+      userId: z.string()
+    }))
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.card.update({
+        where: { id: input.id },
+        data: {
+          members: {
+            connect: { id: input.userId }
+          }
+        }
+      })
+    })
 })

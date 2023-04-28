@@ -34,7 +34,6 @@ const Kanban: React.FC<Props> = ({ boardId, members }) => {
   const onDragEnd = ({ source, destination, draggableId }: DropResult) => {
     if (!destination) return
 
-    console.log(destination.droppableId, draggableId)
     if (source.droppableId !== destination.droppableId) {
       updateCardMutation.mutate({
         id: draggableId,
