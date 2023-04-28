@@ -5,6 +5,7 @@ import AppLayout from "~/components/layout/AppLayout";
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
+import Head from "next/head";
 
 import "~/styles/globals.css"
 import "~/styles/custom-scrollbar.css"
@@ -22,6 +23,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <ThemeProvider theme={theme}>
       <SessionProvider session={session}>
+        <Head>
+          <title>Task Master</title>
+          <meta name="description" content="Project Management System built w/ Next, TS, MUI, TRPC and Prisma" />
+        </Head>
         <ConditionalLayout condition={router.asPath != '/login'} Layout={AppLayout}>
           <Component {...pageProps} />
         </ConditionalLayout>
